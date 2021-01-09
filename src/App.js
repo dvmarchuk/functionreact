@@ -1,23 +1,35 @@
 import React, {Component} from 'react';
 import {useDispatch, useSelector} from "react-redux";
+import User from "./User";
 
 export default function App(){
-    let selector = useSelector((test)=>test);
-    console.log(selector);
-
+    let state = useSelector((test) => test);
     let dispatch = useDispatch();
 
-    let addSomething = () =>{
-        let action = {type: 'ADD', payload: {
+    let addSomething = (e) => {
+        e.preventDefault();
+        dispatch ({
+            type: 'ADD',
+            payload: {
                 id: new Date().getTime(),
-                name: 'Vasya'
-            }}
-        dispatch({action})//processes my action
+                name: e.target[0].value
+            }
+        });
     }
 
     return (
             <div>
-                <button onClick={addSomething}>click</button>
+                <form onSubmit={addSomething}>
+                    <input type="text"/>
+                    <button>click</button>
+                </form>
+
+                <div>
+                    {
+                        state.map(user => <User key={user.id} item={user}/>)
+                    }
+                </div>
+
             </div>
     );
 
