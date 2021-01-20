@@ -1,36 +1,30 @@
-import React, {Component} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import User from "./User";
+import {useEffect} from "react";
+import {GET_USERS} from "./user.action";
+
 
 export default function App(){
-    let state = useSelector((test) => test);
+
+    let state = useSelector(state=> state)
+
     let dispatch = useDispatch();
 
-    let addSomething = (e) => {
-        e.preventDefault();
-        dispatch ({
-            type: 'ADD',
-            payload: {
-                id: new Date().getTime(),
-                name: e.target[0].value
+    useEffect(()=>{
+        fetch('http://jsonplaceholder.typicode.com/posts')
+            .then(value => value.json())
+            .then(value => {
+                dispatch({type:GET_USERS, payload:value})
+            });
+    },[dispatch]);
+
+    return(
+        <div>
+            {
+                state.map(user=> (<div>{user.name}</div>))
             }
-        });
-    }
 
-    return (
-            <div>
-                <form onSubmit={addSomething}>
-                    <input type="text"/>
-                    <button>click</button>
-                </form>
-
-                <div>
-                    {
-                        state.map(user => <User key={user.id} item={user}/>)
-                    }
-                </div>
-
-            </div>
-    );
+        </div>
+    )
 
 }
+
